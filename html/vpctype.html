@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<body>
+<style>
+.button {
+  background-color: #008CBA;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  
+}
+
+</style>
+<h1>Step 1: Select a VPC Configuration</h1>
+
+<form method="GET">
+  <h2>VPC With Single Public Subnet </h2> 
+  <br><img src="html5.gif" alt="HTML5 Icon" width="128" height="128">
+  <canvas id="myCanvas" width="700" height="150" style="border:1px solid #000000;"></canvas>
+ 
+
+
+  <q>Your instances run in a private, isolated section of the AWS cloud with direct access to the Internet. Network access control lists and security groups can be used to provide strict control over inbound and outbound network traffic to your instances.<br>
+  
+<h4>Creates:</h4>
+
+A /16 network with a /24 subnet. Public subnet instances use Elastic IPs or Public IPs to access the Internet.</q><br>
+  <br>
+  <input type="button" class="button" value="SELECT">
+  <br>
+  <br>
+  <h2>VPC with Public and Private Subnets </h2>
+  <canvas id="myCanvas" width="200" height="150" style="border:1px solid #000000;"></canvas>
+  <img src="html5.gif" alt="HTML5 Icon" width="128" height="128">
+  <q>In addition to containing a public subnet, this configuration adds a private subnet whose instances are not addressable from the Internet. Instances in the private subnet can establish outbound connections to the Internet via the public subnet using Network Address Translation (NAT).<br>
+<hd4>Creates:</h4>
+  
+A /16 network with two /24 subnets. Public subnet instances use Elastic IPs to access the Internet. Private subnet instances access the Internet via Network Address Translation (NAT). (Hourly charges for NAT devices apply.)</q><br>
+  <br>
+<input type="button" class="button" value="SELECT">
+  
+
+</body>
+</html>
