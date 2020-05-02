@@ -1,5 +1,26 @@
 from flask import Flask,request
 import requests
+import hashlib
+DBase={}
+def passwordVerification(email,password):
+  if len(DBase)==0:
+    return "You don't have account registered. Please register to proceed."  
+  elif email in DBase.keys():
+  
+    _encoded=hashlib.sha256(str.encode(password))
+    _hash256=_encoded.hexdigest()
+  
+    if DBase[email]==_hash256:
+      return "You are in Dear!"
+    else:
+      return False
+  else:
+      return "Please don't attemt logging in without registration. You are under survellience."
+def passwordMatch(p1,p2):
+    if p1!=p2:
+        return "Your Passwords does not match. Please fill correctly"
+    else:
+        return "You are In Dear!"
 app=Flask(__name__)
 @app.route('/',methods=["GET","POST"])
 def home():
@@ -9,6 +30,19 @@ def home():
 def homenew():
     x=requests.get("http://192.168.43.70/home.html")
     return x.text
+@app.route('/login.html', methods=["GET","POST"])
+def login():
+    emailID=request.form["usrname"]
+    password=request.form["psw"]
+    x=passwordVerification(emailID, password)
+    return x
+@app.route('/signup.html', methods=["GET","POST"])
+def signup():
+    emailID=request.form["emailid"]
+    password=request.form["psw"]
+    passwordd=request.form["psw2"]
+    x=passwordMatch(passwordd, password)
+    return x
 @app.route('/Instance1.html' , methods=['GET','POST'])
 def Instance1():
     x=requests.get("http://192.168.43.70/Instance1.html")
@@ -22,7 +56,7 @@ def Iquery():
         NetworkName=request.form["Network Name"]
         SubnetName=request.form["Subnet Name"]
         InstanceName=request.form["Instance Name"]
-        return list([MetworkName,SubnetName,InstanceName])
+        return list([NetworkName,SubnetName,InstanceName])
 @app.route('/config.html' , methods=['GET','POST'])
 def config():
     return "<h>{}</h>".format(Iquery())
@@ -40,7 +74,7 @@ def VSquery():
         PVPCNameS=request.form["VPC Name"]
         PSubnetIPV4S=request.form["Public subnet's IPv4 CIDR"]
         PSubnetNameS=request.form["Public subnet name"] 
-        return list([MIPV4S,PVPCNameS,PSubnetIPV4S,PSubnetNameS])
+        return list([MPIPv4S,PVPCNameS,PSubnetIPV4S,PSubnetNameS])
 @app.route('/single.html' , methods=['GET','POST'])
 def single():
     return VSquery()
@@ -90,7 +124,7 @@ def Wquery():
         DataBaseUser=request.form["DataBase User"]
         DataBaseUserPassword=request.form["DataBase User Password"]
         DataBaseName=request.form["DataBase Name"]
-        return list([WordPressInstanceName,DataBaseInstanceName,DataBaseRootPassword,DataBaseUser,DataBaseUserPassword,DataBase])
+        return list([WordPressInstanceName,DataBaseInstanceName,DataBaseRootPassword,DataBaseUser,DataBaseUserPassword,DataBaseName])
 @app.route('/pressos.html' , methods=['GET','POST'])
 def pressos():
     return Wquery()
