@@ -3,24 +3,25 @@ import requests
 app=Flask(__name__)
 @app.route('/')
 def home():
-    x=requests.get("http://192.168.43.10/home.html")
+    x=requests.get("http://192.168.43.70/home.html")
     return x.text
 @app.route('/Instance1.html' , methods=['GET','POST'])
 def Instance1():
-    x=requests.get("http://192.168.43.10/Instance1.html")
-    return x.text
+    x=requests.get("http://192.168.43.70/Instance1.html")
+    #print(x.content)
+    return i = Image.open(BytesIO(x.content))
 @app.route('/Instance2.html' , methods=['GET','POST'])
 def Instance2():
     if request.method=="POST":
         NetworkName=request.form["Network Name"]
         SubnetName=request.form["Subnet Name"]
         InstanceName=request.form["Instance Name"]
-        return "<h1>{}</h1>".format(z)
-    y=requests.get("http://192.168.43.10/Instance2.html")
+        
+    y=requests.get("http://192.168.43.70/Instance2.html")
     return y.text
 @app.route('/vpctype.html' , methods=['GET','POST'])
 def vpctype():
-    vpctype=requests.get("http://192.168.43.10/vpctype.html")
+    vpctype=requests.get("http://192.168.43.70/vpctype.html")
     return vpctype.text
 @app.route('/onevpc.html' , methods=['GET','POST'])
 def onevpc():
@@ -31,7 +32,7 @@ def onevpc():
         PSubnetNameS=request.form["Public subnet name"]
         
         return "<h1>{}</h1>".format(z)
-    onevpc=requests.get("http://192.168.43.10/onevpc.html")
+    onevpc=requests.get("http://192.168.43.70/onevpc.html")
     return onevpc.text
 @app.route('/vpcboth.html' , methods=['GET','POST'])
 def vpcboth():
@@ -43,15 +44,15 @@ def vpcboth():
         PrSubnetIPV4=request.form["Private subnet's IPv4 CIDR"]
         PrSubnetName=request.form["Private subnet name"]
         return "<h1>{}</h1>".format(z)
-    vpcboth=requests.get("http://192.168.43.10/vpcboth.html")
+    vpcboth=requests.get("http://192.168.43.70/vpcboth.html")
     return vpcboth.text
 @app.route('/colab.html' , methods=['GET','POST'])
 def colab():
-    colab=requests.get("http://192.168.43.10/vpctype.html")
+    colab=requests.get("http://192.168.43.70/vpctype.html")
     return colab.text
 @app.route('/apacheweb.html' , methods=['GET','POST'])
 def apacheweb():
-    colab=requests.get("http://192.168.43.10/apacheweb.html")
+    colab=requests.get("http://192.168.43.70/apacheweb.html")
     return colab.text
 if __name__=='__main__':
     app.run()
