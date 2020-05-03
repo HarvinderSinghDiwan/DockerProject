@@ -9,5 +9,10 @@ The services which are provided are:
   5) KzureAD Covid Hotspot Points : A graphical service that provides you a high level idea of all the hotspots present in India.
   6) FaceCounter: A service that tells you the counting of human beings in an image.
   7) FaceDetection: A service that detects all the human beings give in an image.
-  
+ 
+
+ The backend.py file is a flask based application that contains the backend integration of this gui based self service application. 
+ The html file contains all the html,css and javascript coding required for the frontend. They also contain the images .jpg , png and other image files used.
+
  In future many more services are planned to be added. Stay tuned for updates.
+
