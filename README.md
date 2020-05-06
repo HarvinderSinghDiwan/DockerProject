@@ -5,6 +5,7 @@ The internal architecture of the services of KZure Web Services is fully contain
 The services which are provided are:
   1) KZure PC2 : It provides a cloud Instance like AWS Service EC2
   ![](output/instance1.png)
+  ![](output/instance3.png)
   ![](output/instance2.png)
   2) VPC Wizard: It provides a infrastructure to you similar to AWS VPC
   ![](output/vpc1.png)
