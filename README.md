@@ -1,7 +1,7 @@
 # DockerProject
-This is a simple Web Application officially termed as KZure Web Services which aims at providing Self-Service via a beautiful Web User Interface.
+### This is a simple Web Application officially termed as KZure Web Services which aims at providing Self-Service via a beautiful Web User Interface.
 ![HOME](output/home.png)
-The internal architecture of the services of KZure Web Services is fully containerized. Every serrvice runs sole on container and hence portable.
+### The internal architecture of the services of KZure Web Services is fully containerized. Every serrvice runs sole on container and hence portable.
 # The services which are provided are:
 ## 1) KZure PC2 : It provides a cloud Instance like AWS Service EC2
   ### STEP1: SELLECT KZURE MACHINE IMAGE
