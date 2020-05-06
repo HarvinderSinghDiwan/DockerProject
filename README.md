@@ -16,4 +16,4 @@ The services which are provided are:
 
  In future many more services are planned to be added. Stay tuned for updates.
 
-![HOME](https://github.com/HarvinderSinghDiwan/DockerProject/tree/master/output/home.png)
+![alt HOME](https://github.com/HarvinderSinghDiwan/DockerProject/tree/master/output/home.png)
