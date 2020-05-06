@@ -14,6 +14,7 @@ The services which are provided are:
   4) Kzure CoLab: A cloud based application for providing you a environment like Google Colab where you can run python codes.
   5) KzureAD Covid Hotspot Points : A graphical service that provides you a high level idea of all the hotspots present in India.
   6) FaceCounter: A service that tells you the counting of human beings in an image.
+  ![](output/count.png)
   7) FaceDetection: A service that detects all the human beings give in an image.
   ![](output/detection.png)
  
