@@ -3,8 +3,8 @@ This is a simple Web Application officially termed as KZure Web Services which a
 ![](output/home.png)
 The internal architecture of the services of KZure Web Services is fully containerized. Every serrvice runs sole on container and hence portable.
 <h1>The services which are provided are:</h1>
-  <h2>1) KZure PC2 : It provides a cloud Instance like AWS Service EC2</h2>
-  ![](output/instance1.png)
+<h2>1) KZure PC2 : It provides a cloud Instance like AWS Service EC2</h2>
+![](output/instance1.png)
   ![](output/instance3.png)
   ![](output/instance2.png)
   <h2>2) VPC Wizard: It provides a infrastructure to you similar to AWS VPC</h2>
