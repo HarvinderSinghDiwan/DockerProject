@@ -17,3 +17,7 @@ The services which are provided are:
  In future many more services are planned to be added. Stay tuned for updates.
 
 ![alt HOME](https://github.com/HarvinderSinghDiwan/DockerProject/tree/master/output/home.png)
+<p align="center">
+  <img src="https://github.com/HarvinderSinghDiwan/DockerProject/tree/master/output/home.png" width="350" title="HOME">
+  <img src="https://github.com/HarvinderSinghDiwan/DockerProject/tree/master/output/home.png" width="350" alt="accessibility text">
+</p>
