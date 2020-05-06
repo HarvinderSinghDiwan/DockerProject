@@ -1,8 +1,11 @@
 # DockerProject
 This is a simple Web Application officially termed as KZure Web Services which aims at providing Self-Service via a beautiful Web User Interface.
+![](output/home.png)
 The internal architecture of the services of KZure Web Services is fully containerized. Every serrvice runs sole on container and hence portable.
 The services which are provided are:
   1) KZure PC2 : It provides a cloud Instance like AWS Service EC2
+  ![](output/Instance1.png)
+  ![](output/Instance2.png)
   2) VPC Wizard: It provides a infrastructure to you similar to AWS VPC
   3) Wordpress: Single click launching of a wordpress server based on apache,php and mysql.
   4) Kzure CoLab: A cloud based application for providing you a environment like Google Colab where you can run python codes.
@@ -16,5 +19,5 @@ The services which are provided are:
 
  In future many more services are planned to be added. Stay tuned for updates.
 
-![](output/home.png)
+
 
