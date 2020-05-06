@@ -11,6 +11,7 @@ The internal architecture of the services of KZure Web Services is fully contain
   ![](output/instance2.png)
 ## 2) VPC Wizard: It provides a infrastructure to you similar to AWS VPC</h2>
   ![](output/vpc1.png)
+  ![](output/vpc1.1.png)
   ![](output/vpc2.png)
 ## 3) Wprdpress: Single click launching of a wordpress server based on apache,php and mysql.</h2>
   ![](output/wprdpress.png)
