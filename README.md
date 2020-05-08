@@ -1,7 +1,7 @@
 # DockerProject
-This is a simple Web Application officially termed as KZure Web Services which aims at providing Self-Service via a beautiful Web User Interface.
+### This is a simple Web Application officially termed as KZure Web Services which aims at providing Self-Service via a beautiful Web User Interface.
 ![HOME](output/home.png)
-The internal architecture of the services of KZure Web Services is fully containerized. Every serrvice runs sole on container and hence portable.
+### The internal architecture of the services of KZure Web Services is fully containerized. Every serrvice runs sole on container and hence portable.
 # The services which are provided are:
 ## 1) KZure PC2 : It provides a cloud Instance like AWS Service EC2
   ### STEP1: SELLECT KZURE MACHINE IMAGE
@@ -11,6 +11,7 @@ The internal architecture of the services of KZure Web Services is fully contain
   ![](output/instance2.png)
 ## 2) VPC Wizard: It provides a infrastructure to you similar to AWS VPC</h2>
   ![](output/vpc1.png)
+  ![](output/vpc1.1.png)
   ![](output/vpc2.png)
 ## 3) Wprdpress: Single click launching of a wordpress server based on apache,php and mysql.</h2>
   ![](output/wprdpress.png)
