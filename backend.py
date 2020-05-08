@@ -1,7 +1,20 @@
-from flask import Flask,request
-import requests
+import os
 import hashlib
+import requests
+from werkzeug.utils import secure_filename
+from flask import Flask,request,Response,json
+from flask import render_template,flash, redirect, url_for
+import cv2
+from flask import send_file
+from mtcnn.mtcnn import MTCNN
+DETECTOR=MTCNN()
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg','webp'}
+UPLOAD_FOLDER = 'Uploads'
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 DBase={}
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 def passwordVerification(email,password):
   if len(DBase)==0:
     return "You don't have account registered. Please register to proceed."  
@@ -21,15 +34,23 @@ def passwordMatch(p1,p2):
         return "Your Passwords does not match. Please fill correctly"
     else:
         return "You are In Dear!"
-app=Flask(__name__)
+@app.route('/covid',methods=["POST","GET"])
+def covid():
+    data = {"latlngs":[[12.962882, 77.543543],[12.967444, 77.498775],[14.656773,77.627936]],"key":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtYWlsSWRlbnRpdHkiOiJIYXJ2aW5kZXJzaW5naGRpd2FuQGdtYWlsLmNvbSJ9.dNAlK8lQjZEd2cLNzUTBNk8VWZX6-ZGwPA9rgNyfp_Y"}
+    a=json.dumps(data)
+    url="https://data.geoiq.io/dataapis/v1.0/covid/locationcheck"
+    #js = json.dumps(x)
+    headers = {'content-type': 'application/json'}
+    r = requests.post(url, data=a, headers=headers)
+    return r.json()
+    #resp = Response(js, status=200, mimetype='application/json')
+    #resp.headers['Link'] = 'https://data.geoiq.io/dataapis/v1.0/covid/locationcheck'
 @app.route('/',methods=["GET","POST"])
 def home():
-    x=requests.get("http://192.168.43.70/home.html")
-    return x.text
+    return render_template("home.html") 
 @app.route('/home.html', methods=["GET","POST"])
 def homenew():
-    x=requests.get("http://192.168.43.70/home.html")
-    return x.text
+    return render_template("home.html")
 @app.route('/login.html', methods=["GET","POST"])
 def login():
     emailID=request.form["usrname"]
@@ -45,12 +66,10 @@ def signup():
     return x
 @app.route('/Instance1.html' , methods=['GET','POST'])
 def Instance1():
-    x=requests.get("http://192.168.43.70/Instance1.html")
-    return x.text
+    return render_template("Instance1.html")
 @app.route('/Instance2.html' , methods=['GET','POST'])
 def Instance2():
-    x=requests.get("http://192.168.43.70/Instance2.html")
-    return x.text
+    return render_template("Instance2.html")
 def Iquery():
     if request.method=="POST":
         NetworkName=request.form["Network Name"]
@@ -62,12 +81,10 @@ def config():
     return "<h>{}</h>".format(Iquery())
 @app.route('/vpctype.html' , methods=['GET','POST'])
 def vpctype():
-    x=requests.get("http://192.168.43.70/vpctype.html")
-    return x.text
+    return render_template("vpctype.html")
 @app.route('/onevpc.html' , methods=['GET','POST'])
 def onevpc():
-    x=requests.get("http://192.168.43.70/onevpc.html")
-    return x.text
+    return render_template("onevpc.html")
 def VSquery():  
     if request.method=="POST":
         MPIPv4S=request.form["IPv4 CIDR block"]
@@ -80,8 +97,7 @@ def single():
     return VSquery()
 @app.route('/vpcboth.html' , methods=['GET','POST'])
 def vpcboth():
-    x=requests.get("http://192.168.43.70/vpcboth.html")
-    return x.text
+    return render_template("vpcboth.html")
 def VBquery():
     if request.method=="POST":
         MPIPv4=request.form["IPv4 CIDR block"]
@@ -98,20 +114,64 @@ def both():
 def colab():
     colab=requests.get("http://192.168.43.70/vpctype.html")
     return colab.text
-@app.route('/detectfaces.html' , methods=['GET','POST'])
-def detectfaces():
-    x=requests.get("http://192.168.43.70/detectfaces.html")
-    return x.text
-@app.route('/detect_faces.html' , methods=['GET','POST'])
-def detect_faces():
-    pass
 @app.route('/countfaces.html' , methods=['GET','POST'])
 def countfaces():
-    x=requests.get("http://192.168.43.70/countfaces.html")
-    return x.text
-@app.route('/count_faces.html' , methods=['GET','POST'])
+    return render_template("countfaces.html")
+@app.route('/countfaces' , methods=['GET','POST'])
 def count_faces():
-    pass
+    if request.method == 'POST':
+        if not request.files['image']:
+            return "It Seems You Didn't Select Any Image File. \n Please Select An Image File Against Which Faces Are to Be Count..."
+        f = request.files['image']
+        if f and allowed_file(f.filename):
+            filename = secure_filename(f.filename).split(".")[0]+".jpg"
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            pic=cv2.imread(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            info=DETECTOR.detect_faces(pic)
+            if len(info) != 0:
+                def facecount():
+                    return str(len(info))
+                return "Hola Amigos! I am Face Counter Assistant Pundhoro. And I could Find  "+facecount()+"  Faces. \n Yippe! Feed Me More..."
+            else:
+                def noface():
+                    return "Oops! Could Not Count Faces. Perhaps! There Might Be No People In The Given Pic Or The Pic May Be  Corrupted . \n Please Try Again"
+                return noface()
+           #return render_template("b.html", name = f.filename)
+        #rnder_template("b.html", name = filename) 
+        else:
+            return "It Seems You Have Uploaded A File Type Which Is Not Supported. \n Please Provide File Having .pdf, .png, .jpg, .jpeg or .webp Extension"
+@app.route('/detectfaces.html' , methods=['GET','POST'])
+def detectfaces():
+    return render_template("detectfaces.html")
+@app.route('/detectfaces' , methods=['GET','POST'])
+def detect_faces():
+    if request.method == 'POST': 
+        if not request.files['image']:
+            return "It Seems You Didn't Select Any Image File. \n Please Select An Image File Against Which Faces Are to Be Count..."
+        f = request.files['image']
+        print(f)
+        if f and allowed_file(f.filename):
+            filename = secure_filename(f.filename).split(".")[0]+".jpg"
+            print(filename)
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            pic=cv2.imread(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            info=DETECTOR.detect_faces(pic)
+            if len(info) != 0:
+                for i in range(len(info)):            
+                    _x,_y,_w,_h=info[i]['box']
+                    c=cv2.rectangle(pic,(_x,_y),(_x+_w,_y+_h),(0,255,255),2)
+                    #crop_pic=c[_y:_y+_h,_x:_x+_w]
+                cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], filename),c)
+                #filename=os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                return send_file(os.path.join(app.config['UPLOAD_FOLDER'], filename), mimetype='image/gif')
+            else:
+                def noface():
+                    return "Oops! No Face detected In The Given Image"
+                return noface()
+            #return render_template("b.html", name = f.filename)
+        #render_template("b.html", name = filename) 
+        else:
+            return "It Seems You Have Uploaded A File Type Which Is Not Supported. \n Please Provide File Having .pdf, .png, .jpg, .jpeg or .webp Extension"
 @app.route('/wordpress.html' , methods=['GET','POST'])
 def wordpress():
     x=requests.get("http://192.168.43.70/wordpress.html")
