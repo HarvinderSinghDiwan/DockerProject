@@ -1,0 +1,47 @@
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<title>KZure Web Services</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<body  bgcolor="pink">
+<form>
+<button formaction="home.html" class="w3-button w3-green w3-large">HOME</button>
+</form><br>
+
+<div class="w3-container">
+
+  <h1>WELCOME TO KZURE WEB SERVICES. WE PROVIDE SELF SERVICES AT ZERO COST.</h1>
+<br><br>
+<h2>ABOUT THE CREATORS</h2>
+<p>Hola Amigos! I am Vedanto Bhata. I've been imported by @SinghHarvin as Data Scientist from CS/It Dept. <br>
+Aloha! I'am Harvinder Singh, imported as DevOps/MLOps/Cloud Engineer from CS/IT Dept </p>
+<br><br>
+<h1>Step 1: Select a VPC Configuration</h1>
+<form method="POST">  
+  <h2>VPC With Single Public Subnet </h2> 
+  <br><img src="S.png" width="300" height="200">
+  <q>Your instances run in a private, isolated section of the AWS cloud with direct access to the Internet. Network access control lists and security groups can be used to provide strict control over inbound and outbound network traffic to your instances.<br>
+  
+<h4>Creates:</h4>
+
+A /16 network with a /24 subnet. Public subnet instances use Elastic IPs or Public IPs to access the Internet.</q><br>
+  <br>
+  <button formaction="onevpc.html" class="w3-button w3-green w3-large">SELECT</button>
+  <br>
+  <br>
+  <h2>VPC with Public and Private Subnets </h2>
+  <img src="SS.png" width="300" height="200">
+  <q>In addition to containing a public subnet, this configuration adds a private subnet whose instances are not addressable from the Internet. Instances in the private subnet can establish outbound connections to the Internet via the public subnet using Network Address Translation (NAT).<br>
+<hd4>Creates:</h4>
+  
+A /16 network with two /24 subnets. Public subnet instances use Elastic IPs to access the Internet. Private subnet instances access the Internet via Network Address Translation (NAT). (Hourly charges for NAT devices apply.)</q><br>
+  <br>
+<button formaction="vpcboth.html" class="w3-button w3-green w3-large">SELECT</button>
+</form>
+
+  
+</div>         
+</body>
+</html>
