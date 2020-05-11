@@ -1,0 +1,4 @@
+flask
+mtcnn
+tensorflow==2.0
+
