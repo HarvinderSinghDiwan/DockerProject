@@ -1,4 +1,7 @@
+#!/usr/bin/python36
+import subprocess as sp
 import os
+from time import sleep
 import hashlib
 import requests
 from werkzeug.utils import secure_filename
@@ -7,12 +10,21 @@ from flask import render_template,flash, redirect, url_for
 import cv2
 from flask import send_file
 from mtcnn.mtcnn import MTCNN
+import socket
+from contextlib import closing
 DETECTOR=MTCNN()
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg','webp'}
 UPLOAD_FOLDER = 'Uploads'
+WORDPRESS_FOLDER='Wordpress'
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['WORDPRESS_FOLDER'] = WORDPRESS_FOLDER
 DBase={}
+def find_free_port():
+    with closing(socket.socket(socket.AF_INET,socket.SOCK_STREAM)) as s:
+        s.bind(('',0))
+        s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+        return s.getsockname()[1]
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 def passwordVerification(email,password):
@@ -174,8 +186,7 @@ def detect_faces():
             return "It Seems You Have Uploaded A File Type Which Is Not Supported. \n Please Provide File Having .pdf, .png, .jpg, .jpeg or .webp Extension"
 @app.route('/wordpress.html' , methods=['GET','POST'])
 def wordpress():
-    x=requests.get("http://192.168.43.70/wordpress.html")
-    return x.text
+    return render_template("wordpress.html")
 def Wquery():
     if request.method=="POST":
         WordPressInstanceName=request.form["WordPress Instance Name"]
@@ -184,10 +195,28 @@ def Wquery():
         DataBaseUser=request.form["DataBase User"]
         DataBaseUserPassword=request.form["DataBase User Password"]
         DataBaseName=request.form["DataBase Name"]
-        return list([WordPressInstanceName,DataBaseInstanceName,DataBaseRootPassword,DataBaseUser,DataBaseUserPassword,DataBaseName])
+        a=sp.getoutput("mkdir Wordpress/{}".format(WordPressInstanceName))
+        sp.getoutput("cp Wordpress/docker-compose.yml  Wordpress/{}/docker-compose.yml".format(WordPressInstanceName))
+        port=find_free_port()
+        with open ("Wordpress/{}/.env".format(WordPressInstanceName),'a') as f:
+            f.write("rootpass={}\nusername={}\nuserpass={}\ndbname={}\nport={}".format(DataBaseRootPassword,DataBaseUser,DataBaseUserPassword,DataBaseName,port))
+        
+        sp.getoutput("cp Wordpress/Up.py  Wordpress/{}/Up.py".format(WordPressInstanceName))
+        a=sp.call("python36 Up.py &",cwd="Wordpress/{}".format(WordPressInstanceName),shell=True)
+        sleep(5)
+        return sleeps(port)
+def sleeps(port):
+        port=port
+        sleep(5)
+        return sleepss(port)
+def sleepss(port):
+        sleep(5)
+        return redirect("http://192.168.43.10:"+str(port),code=302)
+            
+        
+        
 @app.route('/pressos.html' , methods=['GET','POST'])
 def pressos():
     return Wquery()
-
 if __name__=='__main__':
-    app.run()
+    app.run(host="0.0.0.0")
