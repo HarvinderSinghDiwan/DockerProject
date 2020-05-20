@@ -102,7 +102,7 @@ def VSquery():
         sp.getstatusoutput("docker network create --subnet {} --ip-range {} --label {} {}".format(MPIPv4S,PSubnetIPV4S,PSubnetNameS,PVPCNameS))
         with open ("name.txt","w") as f:
             f.write(PVPCNameS)
-        op=sp.getoutput("python36 new.py > templates/single.html")
+        sp.getoutput("python36 runVpc1.py > templates/single.html")
         return render_template("single.html")
 @app.route('/single.html' , methods=['GET','POST'])
 def single():
