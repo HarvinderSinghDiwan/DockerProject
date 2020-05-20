@@ -46,17 +46,6 @@ def passwordMatch(p1,p2):
         return "Your Passwords does not match. Please fill correctly"
     else:
         return "You are In Dear!"
-@app.route('/covid',methods=["POST","GET"])
-def covid():
-    data = {"latlngs":[[12.962882, 77.543543],[12.967444, 77.498775],[14.656773,77.627936]],"key":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtYWlsSWRlbnRpdHkiOiJIYXJ2aW5kZXJzaW5naGRpd2FuQGdtYWlsLmNvbSJ9.dNAlK8lQjZEd2cLNzUTBNk8VWZX6-ZGwPA9rgNyfp_Y"}
-    a=json.dumps(data)
-    url="https://data.geoiq.io/dataapis/v1.0/covid/locationcheck"
-    #js = json.dumps(x)
-    headers = {'content-type': 'application/json'}
-    r = requests.post(url, data=a, headers=headers)
-    return r.json()
-    #resp = Response(js, status=200, mimetype='application/json')
-    #resp.headers['Link'] = 'https://data.geoiq.io/dataapis/v1.0/covid/locationcheck'
 @app.route('/',methods=["GET","POST"])
 def home():
     return render_template("home.html") 
@@ -87,10 +76,17 @@ def Iquery():
         NetworkName=request.form["Network Name"]
         SubnetName=request.form["Subnet Name"]
         InstanceName=request.form["Instance Name"]
-        return list([NetworkName,SubnetName,InstanceName])
+        sp.getoutput("docker network create --subnet {} --ip-range {}  {}".format(NetworkName,SubnetName,InstanceName))
+        sleep(2)
+        portPC2=find_free_port()
+        idC=sp.getoutput("docker run -dit --tmpfs /run -v /sys/fs/cgroup:/sys/fs/cgroup:ro --stop-signal SIGRTMIN+3 --env=DISPLAY -p {}:9862 --name {} --hostname {} --network {}  kzuread:colab  /usr/sbin/init".format(portPC2,InstanceName,InstanceName,InstanceName))
+        sleep(3)
+        sp.getoutput("docker exec {}  xpra start --bind-tcp=0.0.0.0:9862 --start=xterm".format(idC))
+        sleep(4)
+        return redirect("http://192.168.43.10:{}".format(portPC2))
 @app.route('/config.html' , methods=['GET','POST'])
 def config():
-    return "<h>{}</h>".format(Iquery())
+    return Iquery()
 @app.route('/vpctype.html' , methods=['GET','POST'])
 def vpctype():
     return render_template("vpctype.html")
@@ -103,7 +99,11 @@ def VSquery():
         PVPCNameS=request.form["VPC Name"]
         PSubnetIPV4S=request.form["Public subnet's IPv4 CIDR"]
         PSubnetNameS=request.form["Public subnet name"] 
-        return list([MPIPv4S,PVPCNameS,PSubnetIPV4S,PSubnetNameS])
+        sp.getstatusoutput("docker network create --subnet {} --ip-range {} --label {} {}".format(MPIPv4S,PSubnetIPV4S,PSubnetNameS,PVPCNameS))
+        with open ("name.txt","w") as f:
+            f.write(PVPCNameS)
+        op=sp.getoutput("python36 new.py > templates/single.html")
+        return render_template("single.html")
 @app.route('/single.html' , methods=['GET','POST'])
 def single():
     return VSquery()
@@ -121,11 +121,15 @@ def VBquery():
         return list([MPIPv4,PVPCName,PSubnetIPV4,PSubnetName,PrSubnetIPV4,PrSubnetName])
 @app.route('/both.html' , methods=['GET','POST'])
 def both():
-    return VBquery()
+    return "THIS SERVICE IS YET TO BE MAINTAINED... WE ARE SORRY FOR THE INCONVENIENCE....."
 @app.route('/colab.html' , methods=['GET','POST'])
 def colab():
-    colab=requests.get("http://192.168.43.70/vpctype.html")
-    return colab.text
+    portColab=find_free_port()
+    idC=sp.getoutput("docker run -dit --tmpfs /run -v /sys/fs/cgroup:/sys/fs/cgroup:ro --stop-signal SIGRTMIN+3 --env=DISPLAY -p {}:9862 kzuread:colab  /usr/sbin/init".format(portColab))
+    sleep(3)
+    sp.getoutput("docker exec {}  xpra start --bind-tcp=0.0.0.0:9862 --start='jupyter-notebook --allow-root --browser=firefox --ip=0.0.0.0 --port=8080'".format(idC))
+    sleep(4)
+    return redirect("http://192.168.43.10:{}".format(portColab),code=302)
 @app.route('/countfaces.html' , methods=['GET','POST'])
 def countfaces():
     return render_template("countfaces.html")
@@ -184,6 +188,13 @@ def detect_faces():
         #render_template("b.html", name = filename) 
         else:
             return "It Seems You Have Uploaded A File Type Which Is Not Supported. \n Please Provide File Having .pdf, .png, .jpg, .jpeg or .webp Extension"
+
+
+
+#############################       CODE FOR LAUNCHING WORDPRESS        ############################
+
+
+
 @app.route('/wordpress.html' , methods=['GET','POST'])
 def wordpress():
     return render_template("wordpress.html")
@@ -199,8 +210,7 @@ def Wquery():
         sp.getoutput("cp Wordpress/docker-compose.yml  Wordpress/{}/docker-compose.yml".format(WordPressInstanceName))
         port=find_free_port()
         with open ("Wordpress/{}/.env".format(WordPressInstanceName),'a') as f:
-            f.write("rootpass={}\nusername={}\nuserpass={}\ndbname={}\nport={}".format(DataBaseRootPassword,DataBaseUser,DataBaseUserPassword,DataBaseName,port))
-        
+            f.write("rootpass={}\nusername={}\nuserpass={}\ndbname={}\nport={}".format(DataBaseRootPassword,DataBaseUser,DataBaseUserPassword,DataBaseName,port)) 
         sp.getoutput("cp Wordpress/Up.py  Wordpress/{}/Up.py".format(WordPressInstanceName))
         a=sp.call("python36 Up.py &",cwd="Wordpress/{}".format(WordPressInstanceName),shell=True)
         sleep(5)
@@ -218,5 +228,9 @@ def sleepss(port):
 @app.route('/pressos.html' , methods=['GET','POST'])
 def pressos():
     return Wquery()
+
+####### END OF WORDPRESS CODE #######
+
+
 if __name__=='__main__':
-    app.run(host="0.0.0.0")
+    app.run()
